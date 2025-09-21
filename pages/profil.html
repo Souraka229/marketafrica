@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - MarketPlace</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <h1 class="logo">MarketPlace</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../pages/panier.html" id="panier-link">Panier</a></li>
+                    <li><a href="../pages/profil.html" id="profil-link">Profil</a></li>
+                    <li><a href="#" id="login-link">Connexion</a></li>
+                    <li><a href="#" id="logout-link" style="display: none;">Déconnexion</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Votre Profil</h2>
+        <div id="profile-info">
+            <p>Nom: <span id="profile-name"></span></p>
+            <p>Email: <span id="profile-email"></span></p>
+        </div>
+        
+        <div class="profile-actions">
+            <h3>Changer le mot de passe</h3>
+            <form id="change-password-form">
+                <input type="password" id="current-password" placeholder="Mot de passe actuel" required>
+                <input type="password" id="new-password" placeholder="Nouveau mot de passe" required>
+                <button type="submit">Changer le mot de passe</button>
+            </form>
+            <p id="password-change-message"></p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 MarketPlace. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Connexion</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Inscription</h2>
+            <form id="register-form">
+                <input type="text" id="register-name" placeholder="Nom complet" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+        </div>
+    </div>
+
+    <script type="module" src="../js/firebase.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module">
+        import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+        import app from "../js/firebase.js";
+
+        const auth = getAuth(app);
+
+        // Charger les informations du profil
+        function loadProfile() {
+            const user = auth.currentUser;
+            
+            if (user) {
+                document.getElementById('profile-name').textContent = user.displayName || 'Non défini';
+                document.getElementById('profile-email').textContent = user.email;
+            } else {
+                window.location.href = "../index.html";
+            }
+        }
+
+        // Changer le mot de passe
+        document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const messageElement = document.getElementById('password-change-message');
+            
+            const user = auth.currentUser;
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            
+            try {
+                // Réauthentifier l'utilisateur
+                await reauthenticateWithCredential(user, credential);
+                
+                // Changer le mot de passe
+                await updatePassword(user, newPassword);
+                
+                messageElement.textContent = 'Mot de passe changé avec succès!';
+                messageElement.style.color = 'green';
+                
+                // Réinitialiser le formulaire
+                document.getElementById('change-password-form').reset();
+            } catch (error) {
+                console.error("Erreur lors du changement de mot de passe:", error);
+                messageElement.textContent = 'Erreur: ' + error.message;
+                messageElement.style.color = 'red';
+            }
+        });
+
+        // Charger le profil au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>
