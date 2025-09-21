@@ -8,77 +8,41 @@
 </head>
 <body>
     <header>
-        <div class="container header-container">
-            <h1 class="logo">MarketPlace</h1>
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Rechercher un produit...">
-                <button id="search-btn">🔍</button>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>MarketPlace</h1>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="../pages/panier.html" id="panier-link">Panier</a></li>
-                    <li><a href="../pages/profil.html" id="profil-link">Profil</a></li>
-                    <li><a href="#" id="login-link">Connexion</a></li>
-                    <li><a href="#" id="logout-link" style="display: none;">Déconnexion</a></li>
-                </ul>
-            </nav>
-        </div>
+            <div class="nav-search">
+                <input type="text" placeholder="Rechercher un produit...">
+                <button>🔍</button>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html">Accueil</a>
+                <a href="../pages/panier.html">Panier</a>
+                <a href="../pages/profil.html">Profil</a>
+                <a href="#" id="logoutBtn">Déconnexion</a>
+            </div>
+        </nav>
     </header>
 
     <main class="container">
         <section class="filters">
-            <h2>Filtres</h2>
-            <select id="category-filter">
-                <option value="all">Toutes les catégories</option>
+            <select id="categoryFilter">
+                <option value="">Toutes les catégories</option>
                 <option value="electronique">Électronique</option>
                 <option value="vetements">Vêtements</option>
                 <option value="maison">Maison</option>
-                <option value="sport">Sport</option>
+            </select>
+            <select id="boutiqueFilter">
+                <option value="">Toutes les boutiques</option>
             </select>
         </section>
 
-        <section class="products-grid" id="products-container">
-            <!-- Les produits seront chargés dynamiquement ici -->
+        <section class="products-grid" id="productsContainer">
+            <!-- Produits chargés dynamiquement -->
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 MarketPlace. Tous droits réservés.</p>
-        </div>
-    </footer>
-
-    <!-- Modals -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Connexion</h2>
-            <form id="login-form">
-                <input type="email" id="login-email" placeholder="Email" required>
-                <input type="password" id="login-password" placeholder="Mot de passe" required>
-                <button type="submit">Se connecter</button>
-            </form>
-            <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
-        </div>
-    </div>
-
-    <div id="register-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Inscription</h2>
-            <form id="register-form">
-                <input type="text" id="register-name" placeholder="Nom complet" required>
-                <input type="email" id="register-email" placeholder="Email" required>
-                <input type="password" id="register-password" placeholder="Mot de passe" required>
-                <button type="submit">S'inscrire</button>
-            </form>
-            <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
-        </div>
-    </div>
-
-    <script type="module" src="../js/firebase.js"></script>
-    <script type="module" src="../js/auth.js"></script>
     <script type="module" src="../js/main.js"></script>
 </body>
 </html>
