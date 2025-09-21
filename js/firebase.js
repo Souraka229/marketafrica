@@ -1,5 +1,7 @@
-// Initialisation de Firebase avec la configuration fournie
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA2guxEEaWzxQmnp-Gy7tPY2xwgWCuMlow",
@@ -10,8 +12,8 @@ const firebaseConfig = {
     appId: "1:691020926408:web:20a8e52a2c3da9d489c4fd"
 };
 
-// Initialiser Firebase
 const app = initializeApp(firebaseConfig);
-
-// Exporter l'application Firebase pour une utilisation dans d'autres fichiers
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
 export default app;
