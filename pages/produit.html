@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du produit - MarketPlace</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <h1 class="logo">MarketPlace</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../pages/panier.html" id="panier-link">Panier</a></li>
+                    <li><a href="../pages/profil.html" id="profil-link">Profil</a></li>
+                    <li><a href="#" id="login-link">Connexion</a></li>
+                    <li><a href="#" id="logout-link" style="display: none;">Déconnexion</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container product-detail-container">
+        <div id="product-details">
+            <!-- Les détails du produit seront chargés dynamiquement ici -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 MarketPlace. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Connexion</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Inscription</h2>
+            <form id="register-form">
+                <input type="text" id="register-name" placeholder="Nom complet" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+        </div>
+    </div>
+
+    <script type="module" src="../js/firebase.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module">
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+        import app from "../js/firebase.js";
+
+        const db = getFirestore(app);
+
+        // Récupérer l'ID du produit depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Charger les détails du produit
+        async function loadProductDetails() {
+            if (!productId) {
+                document.getElementById('product-details').innerHTML = '<p>Produit non trouvé.</p>';
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "products", productId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const product = docSnap.data();
+                    document.getElementById('product-details').innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.imageUrl}" alt="${product.name}">
+                        </div>
+                        <div class="product-info">
+                            <h2>${product.name}</h2>
+                            <p class="price">${product.price} €</p>
+                            <p class="description">${product.description}</p>
+                            <p class="category">Catégorie: ${product.category}</p>
+                            <button class="add-to-cart-btn" data-id="${productId}">Ajouter au panier</button>
+                        </div>
+                    `;
+
+                    // Ajouter l'événement au bouton
+                    document.querySelector('.add-to-cart-btn').addEventListener('click', addToCart);
+                } else {
+                    document.getElementById('product-details').innerHTML = '<p>Produit non trouvé.</p>';
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement du produit:", error);
+                document.getElementById('product-details').innerHTML = '<p>Erreur lors du chargement du produit.</p>';
+            }
+        }
+
+        // Fonction pour ajouter au panier
+        function addToCart(e) {
+            const productId = e.target.getAttribute('data-id');
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Vérifier si le produit est déjà dans le panier
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Produit ajouté au panier!');
+        }
+
+        // Charger les détails du produit au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadProductDetails);
+    </script>
+</body>
+</html>
