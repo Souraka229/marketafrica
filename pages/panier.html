@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - MarketPlace</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <h1 class="logo">MarketPlace</h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="../pages/panier.html" id="panier-link">Panier</a></li>
+                    <li><a href="../pages/profil.html" id="profil-link">Profil</a></li>
+                    <li><a href="#" id="login-link">Connexion</a></li>
+                    <li><a href="#" id="logout-link" style="display: none;">Déconnexion</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Votre Panier</h2>
+        <div id="cart-items">
+            <!-- Les articles du panier seront chargés dynamiquement ici -->
+        </div>
+        <div class="cart-total">
+            <h3>Total: <span id="cart-total-price">0</span> €</h3>
+            <button id="checkout-btn" disabled>Procéder au paiement</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 MarketPlace. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Connexion</h2>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p>Pas encore de compte ? <a href="#" id="show-register">S'inscrire</a></p>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Inscription</h2>
+            <form id="register-form">
+                <input type="text" id="register-name" placeholder="Nom complet" required>
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Mot de passe" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
+        </div>
+    </div>
+
+    <script type="module" src="../js/firebase.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/panier.js"></script>
+</body>
+</html>
